@@ -31,8 +31,8 @@ final class MovieServiceImpl: MovieService {
     
     func getMovieList() -> AnyPublisher<[MovieListItem], Error> {
         guard let movieListRequest = reqeustFactory.movieListRequest(page: 1) else {
-            // Just
-            fatalError()
+            return Fail(error: NetworkError.invalidRequest)
+                .eraseToAnyPublisher()
         }
 
         let publisher: AnyPublisher<MoiveListResponse, Error> = requestData(request: movieListRequest)
@@ -44,8 +44,8 @@ final class MovieServiceImpl: MovieService {
     
     func getMovie(for movieId: Int) -> AnyPublisher<Movie, Error> {
         guard let movieRequest = reqeustFactory.movieRequest(for: movieId) else {
-            // Just
-            fatalError()
+            return Fail(error: NetworkError.invalidRequest)
+                .eraseToAnyPublisher()
         }
 
         let publisher: AnyPublisher<MoiveResponse, Error> = requestData(request: movieRequest)

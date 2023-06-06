@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-private enum Metrics {
+private enum Constants {
     static let title = "Фильмы"
     
     enum Cell {
@@ -27,9 +27,9 @@ struct MoviesListView: View {
     var body: some View {
         NavigationStack {
             List(viewModel.movies) { movie in
-                MovieCell(film: movie)
+                MovieCell(movie: movie)
                     .background {
-                        // Скрытие стрелку
+                        // Скрытие стрелки
                         NavigationLink(value: movie) {
                             EmptyView()
                         }
@@ -37,18 +37,17 @@ struct MoviesListView: View {
                     }
                     .listRowSeparator(.hidden)
                     .listRowBackground(
-                        RoundedRectangle(cornerRadius: Metrics.Cell.cornerRadius)
-                            .foregroundColor(Metrics.Cell.color)
-                            .padding(Metrics.Cell.padding)
-                            .shadow(color: Metrics.Cell.shadowColor, radius: Metrics.Cell.shadowRadius)
-
+                        RoundedRectangle(cornerRadius: Constants.Cell.cornerRadius)
+                            .foregroundColor(Constants.Cell.color)
+                            .padding(Constants.Cell.padding)
+                            .shadow(color: Constants.Cell.shadowColor, radius: Constants.Cell.shadowRadius)
                     )
-                    .frame(height: Metrics.Cell.height)
+                    .frame(height: Constants.Cell.height)
             }
             .navigationDestination(for: MovieListItem.self) { movie in                
                 MovieDetailView(kinopoiskId: movie.kinopoiskId)
             }
-            .navigationTitle(Text(Metrics.title))
+            .navigationTitle(Text(Constants.title))
             .listStyle(PlainListStyle())
         }
         .onAppear(perform: viewModel.onAppear)

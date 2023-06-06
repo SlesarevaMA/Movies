@@ -15,8 +15,8 @@ final class MovieListViewModel: ObservableObject {
     
     private var subscription: AnyCancellable?
     
-    init() {
-        movieService = MovieServiceImpl()
+    init(movieService: MovieService = MovieServiceImpl()) {
+        self.movieService = movieService
     }
     
     func onAppear() {

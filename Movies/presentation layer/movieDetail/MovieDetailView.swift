@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-private enum Metrics {
+private enum Constants {
     static let titleFont: Font = .system(size: 16, weight: .bold)
     static let descriptionFont: Font = .system(size: 14)
     static let descriptionColor: Color = .init(hex: 0x666666)
@@ -24,24 +24,13 @@ private enum Metrics {
         static let font: Font = .system(size: 16, weight: .bold)
         static let color: Color = .init(hex: 0x4557A2)
     }
-    
-    static let style: AttributeContainer = AttributeContainer.font(.system(size: 16, weight: .bold))
 
-    enum desriptoinTitles {
+    enum DesriptoinTitles {
         static let genres = AttributedString(unicodeScalarLiteral: "Жанры: ").settingAttributes(style)
         static let countries = AttributedString(unicodeScalarLiteral: "Страны: ").settingAttributes(style)
         static let year = AttributedString(unicodeScalarLiteral: "Год: ").settingAttributes(style)
+        private static let style: AttributeContainer = AttributeContainer.font(.system(size: 16, weight: .bold))
     }
-}
-
-struct MovieDetail {
-    let id: Int
-    let url: URL
-    let name: String
-    let genres: String
-    let description: String
-    let countries: String
-    let year: Int
 }
 
 struct MovieDetailView: View {
@@ -55,10 +44,10 @@ struct MovieDetailView: View {
     var body: some View {
         VStack.zeroSpacing {
             image
-                .frame(maxHeight: Metrics.imageMaxHeight)
+                .frame(maxHeight: Constants.imageMaxHeight)
                         
             descriptions
-                .padding(.horizontal, Metrics.horizontalDescriptionSpacing)
+                .padding(.horizontal, Constants.horizontalDescriptionSpacing)
             
             Spacer(minLength: 0)
         }
@@ -71,46 +60,41 @@ struct MovieDetailView: View {
         }
     }
     
-    func setMovieId(_ movieId: Int) {
-        viewModel.setMovieId(movieId)
-    }
-    
     private var backButton: some View {
         Button(action: {
             presentationMode.wrappedValue.dismiss()
         }, label: {
-            Image(systemName: Metrics.BackButton.name)
-                .font(Metrics.BackButton.font)
-                .foregroundColor(Metrics.BackButton.color)
+            Image(systemName: Constants.BackButton.name)
+                .font(Constants.BackButton.font)
+                .foregroundColor(Constants.BackButton.color)
         })
     }
     
     private var descriptions: some View {
         VStack.zeroSpacing {
-            
             if let movie = viewModel.movie {
                 Text(movie.name)
-                    .font(Metrics.titleFont)
-                    .padding(.top, Metrics.topDescriptionVerticalSpacing)
+                    .font(Constants.titleFont)
+                    .padding(.top, Constants.topDescriptionVerticalSpacing)
                 
                 Text(movie.description)
-                    .font(Metrics.descriptionFont)
-                    .foregroundColor(Metrics.descriptionColor)
-                    .padding(.vertical, Metrics.verticalSpacing)
+                    .font(Constants.descriptionFont)
+                    .foregroundColor(Constants.descriptionColor)
+                    .padding(.vertical, Constants.verticalSpacing)
                 
-                Text("\(Metrics.desriptoinTitles.genres)\(movie.genres)")
-                    .font(Metrics.descriptionFont)
-                    .foregroundColor(Metrics.descriptionColor)
+                Text("\(Constants.DesriptoinTitles.genres)\(movie.genres)")
+                    .font(Constants.descriptionFont)
+                    .foregroundColor(Constants.descriptionColor)
                 
-                Text("\(Metrics.desriptoinTitles.countries)\(movie.countries)")
-                    .font(Metrics.descriptionFont)
-                    .foregroundColor(Metrics.descriptionColor)
-                    .padding(.top, Metrics.topSpacing)
+                Text("\(Constants.DesriptoinTitles.countries)\(movie.countries)")
+                    .font(Constants.descriptionFont)
+                    .foregroundColor(Constants.descriptionColor)
+                    .padding(.top, Constants.topSpacing)
                 
-                Text("\(Metrics.desriptoinTitles.year)\(movie.year.description)")
-                    .font(Metrics.descriptionFont)
-                    .foregroundColor(Metrics.descriptionColor)
-                    .padding(.top, Metrics.topSpacing)
+                Text("\(Constants.DesriptoinTitles.year)\(movie.year.description)")
+                    .font(Constants.descriptionFont)
+                    .foregroundColor(Constants.descriptionColor)
+                    .padding(.top, Constants.topSpacing)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -22,7 +22,7 @@ private enum Metrics {
 }
 
 struct MovieCell: View {
-    let film: MovieListItem
+    let movie: MovieListItem
     
     var body: some View {
         HStack(spacing: .zero) {
@@ -34,7 +34,7 @@ struct MovieCell: View {
     }
     
     private var image: some View {
-        AsyncImage(url: film.posterUrl) { phase in
+        AsyncImage(url: movie.posterUrl) { phase in
             phase
                 .image?
                 .resizable()
@@ -46,10 +46,10 @@ struct MovieCell: View {
     
     private var movieDescription: some View {
         VStack(alignment: .leading) {
-            Text(film.name)
+            Text(movie.name)
                 .font(Metrics.nameFont)
             
-            Text("\(film.genre) (\(film.year.description))")
+            Text("\(movie.genre) (\(movie.year.description))")
                 .font(Metrics.descriptionFont)
                 .foregroundColor(Metrics.descriptionColor)
         }
