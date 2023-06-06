@@ -8,13 +8,30 @@
 import SwiftUI
 
 private enum Metrics {
-    static let titleFont: Font = .system(size: 20, weight: .semibold)
+    static let titleFont: Font = .system(size: 16, weight: .bold)
     static let descriptionFont: Font = .system(size: 14)
     static let descriptionColor: Color = .init(hex: 0x666666)
     
     static let topDescriptionVerticalSpacing: CGFloat = 20
-    static let bottomDescriptionVerticalSpacing: CGFloat = 24
     static let horizontalDescriptionSpacing: CGFloat = 30
+    static let verticalSpacing: CGFloat = 16
+    static let topSpacing: CGFloat = 8
+    
+    static let imageMaxHeight: CGFloat = 600
+    
+    enum BackButton {
+        static let name = "arrow.left"
+        static let font: Font = .system(size: 16, weight: .bold)
+        static let color: Color = .init(hex: 0x4557A2)
+    }
+    
+    static let style: AttributeContainer = AttributeContainer.font(.system(size: 16, weight: .bold))
+
+    enum desriptoinTitles {
+        static let genres = AttributedString(unicodeScalarLiteral: "Жанры: ").settingAttributes(style)
+        static let countries = AttributedString(unicodeScalarLiteral: "Страны: ").settingAttributes(style)
+        static let year = AttributedString(unicodeScalarLiteral: "Год: ").settingAttributes(style)
+    }
 }
 
 struct MovieDetail {
@@ -38,10 +55,10 @@ struct MovieDetailView: View {
     var body: some View {
         VStack.zeroSpacing {
             image
-                .frame(maxHeight: 600)
+                .frame(maxHeight: Metrics.imageMaxHeight)
                         
             descriptions
-                .padding(.horizontal, 30)
+                .padding(.horizontal, Metrics.horizontalDescriptionSpacing)
             
             Spacer(minLength: 0)
         }
@@ -62,43 +79,38 @@ struct MovieDetailView: View {
         Button(action: {
             presentationMode.wrappedValue.dismiss()
         }, label: {
-            Image(systemName: "arrow.left")
-                .font(.system(size: 16, weight: .bold))
-                .foregroundColor(Color(hex: 0x4557A2))
+            Image(systemName: Metrics.BackButton.name)
+                .font(Metrics.BackButton.font)
+                .foregroundColor(Metrics.BackButton.color)
         })
-    }
-    
-    private var titleString: AttributedString {
-        let result = AttributedString()
-        let style = AttributeContainer.font(.system(size: 16, weight: .bold))
-        return result.settingAttributes(style)
     }
     
     private var descriptions: some View {
         VStack.zeroSpacing {
+            
             if let movie = viewModel.movie {
                 Text(movie.name)
                     .font(Metrics.titleFont)
-                    .padding(.top, 20)
+                    .padding(.top, Metrics.topDescriptionVerticalSpacing)
                 
                 Text(movie.description)
                     .font(Metrics.descriptionFont)
                     .foregroundColor(Metrics.descriptionColor)
-                    .padding(.vertical, 16)
+                    .padding(.vertical, Metrics.verticalSpacing)
                 
-                Text("Жанры: \(movie.genres)")
+                Text("\(Metrics.desriptoinTitles.genres)\(movie.genres)")
                     .font(Metrics.descriptionFont)
                     .foregroundColor(Metrics.descriptionColor)
                 
-                Text("Страны: \(movie.countries)")
+                Text("\(Metrics.desriptoinTitles.countries)\(movie.countries)")
                     .font(Metrics.descriptionFont)
                     .foregroundColor(Metrics.descriptionColor)
-                    .padding(.top, 8.0)
+                    .padding(.top, Metrics.topSpacing)
                 
-                Text("Год: \(movie.year.description)")
+                Text("\(Metrics.desriptoinTitles.year)\(movie.year.description)")
                     .font(Metrics.descriptionFont)
                     .foregroundColor(Metrics.descriptionColor)
-                    .padding(.top, 8.0)
+                    .padding(.top, Metrics.topSpacing)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -67,12 +67,12 @@ final class MovieServiceImpl: MovieService {
                 return nil
             }
             
-            let genres = mapEntities(entities: movie.genres)
-                        
+            let genre = movie.genres.first?.description ?? ""
+
             return MovieListItem(
                 kinopoiskId: movie.filmId,
                 name: movie.nameRu,
-                genres: genres,
+                genre: genre,
                 year: Int(movie.year) ?? 0,
                 posterUrl: posterUrl
             )

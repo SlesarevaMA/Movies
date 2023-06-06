@@ -12,7 +12,7 @@ struct MovieListItem: Identifiable, Hashable {
     
     let kinopoiskId: Int
     let name: String
-    let genres: String
+    let genre: String
     let year: Int
     let posterUrl: URL
 }

@@ -9,19 +9,27 @@ import SwiftUI
 import Combine
 
 private enum Metrics {
+    static let title = "Фильмы"
     
+    enum Cell {
+        static let height: CGFloat = 93
+        static let cornerRadius: CGFloat = 15
+        static let color: Color = .white
+        static let padding: EdgeInsets = .init(top: 6, leading: 16, bottom: 6, trailing: 16)
+        static let shadowColor: Color = .init(hex: 0xbfbfbf)
+        static let shadowRadius: CGFloat = 10
+    }
 }
 
 struct MoviesListView: View {
     @StateObject var viewModel = MovieListViewModel()
-//    @State private var selectedMovie: Movie?
     
     var body: some View {
         NavigationStack {
             List(viewModel.movies) { movie in
                 MovieCell(film: movie)
                     .background {
-                        // Скрываем стрелку
+                        // Скрытие стрелку
                         NavigationLink(value: movie) {
                             EmptyView()
                         }
@@ -29,18 +37,18 @@ struct MoviesListView: View {
                     }
                     .listRowSeparator(.hidden)
                     .listRowBackground(
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundColor(Color.white)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 6)
-                            .shadow(color: .init(hex: 0xbfbfbf), radius: 10)
+                        RoundedRectangle(cornerRadius: Metrics.Cell.cornerRadius)
+                            .foregroundColor(Metrics.Cell.color)
+                            .padding(Metrics.Cell.padding)
+                            .shadow(color: Metrics.Cell.shadowColor, radius: Metrics.Cell.shadowRadius)
 
                     )
-                .frame(height: 93)
+                    .frame(height: Metrics.Cell.height)
             }
             .navigationDestination(for: MovieListItem.self) { movie in                
                 MovieDetailView(kinopoiskId: movie.kinopoiskId)
             }
+            .navigationTitle(Text(Metrics.title))
             .listStyle(PlainListStyle())
         }
         .onAppear(perform: viewModel.onAppear)

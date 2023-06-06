@@ -8,7 +8,17 @@
 import SwiftUI
 
 private enum Metrics {
-//    static let horizontalPadding
+    static let horizontalPadding: CGFloat = 15
+    
+    static let nameFont: Font = .system(size: 16, weight: .medium)
+    static let descriptionFont: Font = .system(size: 14, weight: .medium)
+    static let descriptionColor: Color = .init(hex: 0x666666)
+        
+    enum Image {
+        static let width: CGFloat = 40
+        static let height: CGFloat = 63
+        static let cornerRadius: CGFloat = 5
+    }
 }
 
 struct MovieCell: View {
@@ -20,7 +30,7 @@ struct MovieCell: View {
             
             movieDescription
         }
-        .padding(.horizontal, 15)
+        .padding(.horizontal, Metrics.horizontalPadding)
     }
     
     private var image: some View {
@@ -30,19 +40,19 @@ struct MovieCell: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
         }
-        .frame(width: 40, height: 63)
-        .cornerRadius(5)
+        .frame(width: Metrics.Image.width, height: Metrics.Image.height)
+        .cornerRadius(Metrics.Image.cornerRadius)
     }
     
     private var movieDescription: some View {
         VStack(alignment: .leading) {
             Text(film.name)
-                .font(.system(size: 16, weight: .medium))
+                .font(Metrics.nameFont)
             
-            Text("\(film.genres) (\(film.year.description))")
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(.init(hex: 0x666666))
+            Text("\(film.genre) (\(film.year.description))")
+                .font(Metrics.descriptionFont)
+                .foregroundColor(Metrics.descriptionColor)
         }
-        .padding(.leading, 15)
+        .padding(.leading, Metrics.horizontalPadding)
     }
 }
