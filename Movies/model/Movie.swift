@@ -5,6 +5,8 @@
 //  Created by Margarita Slesareva on 05.06.2023.
 //
 
+import Foundation
+
 struct Movie: Hashable {
     let kinopoiskId: Int
     let name: String
@@ -12,5 +14,5 @@ struct Movie: Hashable {
     let countries: String
     let genres: String
     let year: Int
-    let posterUrl: String
+    let posterUrl: URL
 }

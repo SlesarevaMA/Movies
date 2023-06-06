@@ -10,7 +10,7 @@ import Combine
 
 protocol MovieService {
     func getMovieList() -> AnyPublisher<[MovieListItem], Error>
-    func getMovie() -> AnyPublisher<Movie, Error>
+    func getMovie(for movieId: Int) -> AnyPublisher<Movie, Error>
 }
 
 final class MovieServiceImpl: MovieService {
@@ -31,6 +31,7 @@ final class MovieServiceImpl: MovieService {
     
     func getMovieList() -> AnyPublisher<[MovieListItem], Error> {
         guard let movieListRequest = reqeustFactory.movieListRequest(page: 1) else {
+            // Just
             fatalError()
         }
 
@@ -41,15 +42,16 @@ final class MovieServiceImpl: MovieService {
             .eraseToAnyPublisher()
     }
     
-    func getMovie() -> AnyPublisher<Movie, Error> {
-        guard let movieRequest = reqeustFactory.movieRequest(movie: 301) else {
+    func getMovie(for movieId: Int) -> AnyPublisher<Movie, Error> {
+        guard let movieRequest = reqeustFactory.movieRequest(for: movieId) else {
+            // Just
             fatalError()
         }
 
         let publisher: AnyPublisher<MoiveResponse, Error> = requestData(request: movieRequest)
         
         return publisher
-            .map(mapMovieResponse)
+            .compactMap(mapMovieResponse)
             .eraseToAnyPublisher()
     }
             
@@ -60,22 +62,30 @@ final class MovieServiceImpl: MovieService {
     }
     
     private func mapMovieListResponse(_ response: MoiveListResponse) -> [MovieListItem] {
-        return response.films.map { movie in
-            let genres = mapGenres(genres: movie.genres)
+        return response.films.compactMap { movie in
+            guard let posterUrl = URL(string: movie.posterUrlPreview) else {
+                return nil
+            }
+            
+            let genres = mapEntities(entities: movie.genres)
                         
             return MovieListItem(
                 kinopoiskId: movie.filmId,
                 name: movie.nameRu,
                 genres: genres,
                 year: Int(movie.year) ?? 0,
-                posterUrl: movie.posterUrlPreview
+                posterUrl: posterUrl
             )
         }
     }
     
-    private func mapMovieResponse(_ response: MoiveResponse) -> Movie {
-        let genres = mapGenres(genres: response.genres)
-        let countries = mapContries(contries: response.countries)
+    private func mapMovieResponse(_ response: MoiveResponse) -> Movie? {
+        guard let posterUrl = URL(string: response.posterUrlPreview) else {
+            return nil
+        }
+        
+        let genres = mapEntities(entities: response.genres)
+        let countries = mapEntities(entities: response.countries)
         
         return Movie(
             kinopoiskId: response.kinopoiskId,
@@ -84,27 +94,17 @@ final class MovieServiceImpl: MovieService {
             countries: countries,
             genres: genres,
             year: response.year,
-            posterUrl: response.posterUrlPreview
+            posterUrl: posterUrl
         )
     }
-    
-    private func mapGenres(genres: [Genre]) -> String {
-        genres.reduce("", { perviousResult, nextValue in
+        
+    private func mapEntities<T: CustomStringConvertible>(entities: [T]) -> String {
+        entities.reduce("", { perviousResult, nextValue in
             if perviousResult.isEmpty {
-                return nextValue.genre
+                return "\(nextValue.description)"
             }
             
-            return perviousResult + ", " + nextValue.genre
-        })
-    }
-    
-    private func mapContries<T: Decodable>(contries: [T]) -> String {
-        contries.reduce("", { perviousResult, nextValue in
-            if perviousResult.isEmpty {
-                return "\(nextValue)"
-            }
-            
-            return perviousResult + ", " + "\(nextValue)"
+            return perviousResult + ", " + "\(nextValue.description)"
         })
     }
 }

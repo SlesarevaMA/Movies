@@ -20,15 +20,13 @@ final class MovieListViewModel: ObservableObject {
     }
     
     func onAppear() {
-        
-            
         subscription = movieService
             .getMovieList()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink(receiveCompletion: { completion in
                 print(completion)
-            } receiveValue: { [weak self] movies in
+            }, receiveValue: { [weak self] movies in
                 self?.movies = movies
-            }
+            })
     }
 }

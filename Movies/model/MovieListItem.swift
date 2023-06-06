@@ -14,5 +14,5 @@ struct MovieListItem: Identifiable, Hashable {
     let name: String
     let genres: String
     let year: Int
-    let posterUrl: String
+    let posterUrl: URL
 }

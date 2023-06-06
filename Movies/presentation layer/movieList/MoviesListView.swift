@@ -8,10 +8,13 @@
 import SwiftUI
 import Combine
 
+private enum Metrics {
+    
+}
+
 struct MoviesListView: View {
-//    @Environment(\.presentationMode) var presentationMode
     @StateObject var viewModel = MovieListViewModel()
-    @State private var selectedMovie: Movie?
+//    @State private var selectedMovie: Movie?
     
     var body: some View {
         NavigationStack {
@@ -35,17 +38,8 @@ struct MoviesListView: View {
                     )
                 .frame(height: 93)
             }
-            .navigationDestination(for: Movie.self) { movie in
-                let movie = MovieDetail(
-                    url: URL(string: movie.posterUrl)!,
-                    name: movie.name,
-                    genres: movie.genres,
-                    description: movie.description,
-                    countries: movie.countries,
-                    year: movie.year
-                )
-                
-                MovieDetailView(model: movie)
+            .navigationDestination(for: MovieListItem.self) { movie in                
+                MovieDetailView(kinopoiskId: movie.kinopoiskId)
             }
             .listStyle(PlainListStyle())
         }

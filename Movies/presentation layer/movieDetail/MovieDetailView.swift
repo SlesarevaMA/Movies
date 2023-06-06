@@ -31,7 +31,9 @@ struct MovieDetailView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    let model: MovieDetail
+    let kinopoiskId: Int
+    
+    @StateObject var viewModel = MovieDetailViewModel()
         
     var body: some View {
         VStack.zeroSpacing {
@@ -46,6 +48,14 @@ struct MovieDetailView: View {
         .ignoresSafeArea(edges: .top)
         .navigationBarBackButtonHidden()
         .navigationBarItems(leading: backButton)
+        .onAppear {
+            viewModel.setMovieId(kinopoiskId)
+            viewModel.onAppear()
+        }
+    }
+    
+    func setMovieId(_ movieId: Int) {
+        viewModel.setMovieId(movieId)
     }
     
     private var backButton: some View {
@@ -66,52 +76,42 @@ struct MovieDetailView: View {
     
     private var descriptions: some View {
         VStack.zeroSpacing {
-            Text(model.name)
-                .font(Metrics.titleFont)
-                .padding(.top, 20)
-            
-            Text(model.description)
-                .font(Metrics.descriptionFont)
-                .foregroundColor(Metrics.descriptionColor)
-                .padding(.vertical, 16)
-            
-            Text("Жанры: \(model.genres)")
-                .font(Metrics.descriptionFont)
-                .foregroundColor(Metrics.descriptionColor)
-            
-            Text("Страны: \(model.countries)")
-                .font(Metrics.descriptionFont)
-                .foregroundColor(Metrics.descriptionColor)
-                .padding(.top, 8.0)
-            
-            Text("Год: \(model.year.description)")
-                .font(Metrics.descriptionFont)
-                .foregroundColor(Metrics.descriptionColor)
-                .padding(.top, 8.0)
+            if let movie = viewModel.movie {
+                Text(movie.name)
+                    .font(Metrics.titleFont)
+                    .padding(.top, 20)
+                
+                Text(movie.description)
+                    .font(Metrics.descriptionFont)
+                    .foregroundColor(Metrics.descriptionColor)
+                    .padding(.vertical, 16)
+                
+                Text("Жанры: \(movie.genres)")
+                    .font(Metrics.descriptionFont)
+                    .foregroundColor(Metrics.descriptionColor)
+                
+                Text("Страны: \(movie.countries)")
+                    .font(Metrics.descriptionFont)
+                    .foregroundColor(Metrics.descriptionColor)
+                    .padding(.top, 8.0)
+                
+                Text("Год: \(movie.year.description)")
+                    .font(Metrics.descriptionFont)
+                    .foregroundColor(Metrics.descriptionColor)
+                    .padding(.top, 8.0)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    private var image: some View {
-        AsyncImage(url: model.url) { phase in
-            phase
-                .image?
-                .resizable()
-                .aspectRatio(contentMode: .fill)
+    @ViewBuilder private var image: some View {
+        if let movie = viewModel.movie {
+            AsyncImage(url: movie.posterUrl) { phase in
+                phase
+                    .image?
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            }
         }
-    }
-}
-
-struct FilmDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        MovieDetailView(model: MovieDetail(
-            id: 301,
-            url: URL(string: "https://kinopoiskapiunofficial.tech/images/posters/kp/840152.jpg")!,
-            name: "Изгой-один: Звёздные войны",
-            genres: "Жанры: фантастика, приключения",
-            description: "Сопротивление собирает отряд для выполнения особой миссии - надо выкрасть чертежи самого совершенного и мертоносного оружия Империи. Не всем суждено вернуться домой, но герои готовы к этому, ведь на кону судьба Галактики",
-            countries: "США",
-            year: 2022
-        ))
     }
 }

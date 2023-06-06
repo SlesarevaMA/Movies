@@ -14,14 +14,23 @@ final class MovieDetailViewModel: ObservableObject {
     private let movieService: MovieService
     
     private var subscription: AnyCancellable?
+    private var movieId: Int?
     
-    init() {
-        movieService = MovieServiceImpl()
+    init(movieService: MovieService = MovieServiceImpl()) {
+        self.movieService = movieService
+    }
+    
+    func setMovieId(_ movieId: Int) {
+        self.movieId = movieId
     }
     
     func onAppear() {
+        guard let movieId else {
+            return
+        }
+        
         subscription = movieService
-            .getMovie()
+            .getMovie(for: movieId)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print(completion)

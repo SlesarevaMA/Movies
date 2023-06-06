@@ -9,7 +9,7 @@ import Foundation
 
 protocol RequestFactory {
     func movieListRequest(page: Int) -> URLRequest?
-    func movieRequest(movie id: Int) -> URLRequest?
+    func movieRequest(for movieId: Int) -> URLRequest?
 }
 
 final class RequestFactoryImpl: RequestFactory {
@@ -26,8 +26,8 @@ final class RequestFactoryImpl: RequestFactory {
         return configureRequest(urlString: movieListUrl)
     }
     
-    func movieRequest(movie id: Int) -> URLRequest? {
-        let movieUrl = apiUrl + "\(id)"
+    func movieRequest(for movieId: Int) -> URLRequest? {
+        let movieUrl = apiUrl + "\(movieId)"
         
         return configureRequest(urlString: movieUrl)
     }

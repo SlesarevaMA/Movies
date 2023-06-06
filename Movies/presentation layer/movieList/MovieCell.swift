@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+private enum Metrics {
+//    static let horizontalPadding
+}
+
 struct MovieCell: View {
     let film: MovieListItem
     
@@ -20,7 +24,7 @@ struct MovieCell: View {
     }
     
     private var image: some View {
-        AsyncImage(url: URL(string: film.posterUrl)!) { phase in
+        AsyncImage(url: film.posterUrl) { phase in
             phase
                 .image?
                 .resizable()

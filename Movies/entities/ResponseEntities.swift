@@ -7,12 +7,20 @@
 
 import Foundation
 
-struct Country: Decodable {
+struct Country: Decodable, CustomStringConvertible {
     let country: String
+    
+    var description: String {
+        return country
+    }
 }
 
-struct Genre: Decodable {
+struct Genre: Decodable, CustomStringConvertible {
     let genre: String
+    
+    var description: String {
+        return genre
+    }
 }
 
 struct FilmListAPIEntity: Decodable {
