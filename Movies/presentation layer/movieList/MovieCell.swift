@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MovieCell: View {
-    let film: Movie
+    let film: MovieListItem
     
     var body: some View {
         HStack(spacing: .zero) {

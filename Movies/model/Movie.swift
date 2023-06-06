@@ -2,13 +2,10 @@
 //  Movie.swift
 //  Movies
 //
-//  Created by Margarita Slesareva on 31.05.2023.
+//  Created by Margarita Slesareva on 05.06.2023.
 //
 
-import SwiftUI
-
-struct Movie: Identifiable, Hashable {
-    let id = UUID()
+struct Movie: Hashable {
     let kinopoiskId: Int
     let name: String
     let description: String

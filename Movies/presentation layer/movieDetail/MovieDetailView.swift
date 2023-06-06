@@ -18,11 +18,12 @@ private enum Metrics {
 }
 
 struct MovieDetail {
+    let id: Int
     let url: URL
     let name: String
     let genres: String
     let description: String
-    let country: String
+    let countries: String
     let year: Int
 }
 
@@ -74,11 +75,11 @@ struct MovieDetailView: View {
                 .foregroundColor(Metrics.descriptionColor)
                 .padding(.vertical, 16)
             
-            Text("Жанры: \(model.genre)")
+            Text("Жанры: \(model.genres)")
                 .font(Metrics.descriptionFont)
                 .foregroundColor(Metrics.descriptionColor)
             
-            Text("Страны: \(model.country)")
+            Text("Страны: \(model.countries)")
                 .font(Metrics.descriptionFont)
                 .foregroundColor(Metrics.descriptionColor)
                 .padding(.top, 8.0)
@@ -104,11 +105,12 @@ struct MovieDetailView: View {
 struct FilmDetailView_Previews: PreviewProvider {
     static var previews: some View {
         MovieDetailView(model: MovieDetail(
+            id: 301,
             url: URL(string: "https://kinopoiskapiunofficial.tech/images/posters/kp/840152.jpg")!,
             name: "Изгой-один: Звёздные войны",
             genres: "Жанры: фантастика, приключения",
             description: "Сопротивление собирает отряд для выполнения особой миссии - надо выкрасть чертежи самого совершенного и мертоносного оружия Империи. Не всем суждено вернуться домой, но герои готовы к этому, ведь на кону судьба Галактики",
-            country: "США",
+            countries: "США",
             year: 2022
         ))
     }

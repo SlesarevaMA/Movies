@@ -11,7 +11,7 @@ import Combine
 struct MoviesListView: View {
 //    @Environment(\.presentationMode) var presentationMode
     @StateObject var viewModel = MovieListViewModel()
-    @State private var selectedMovie: Movie? = nil
+    @State private var selectedMovie: Movie?
     
     var body: some View {
         NavigationStack {
@@ -40,8 +40,8 @@ struct MoviesListView: View {
                     url: URL(string: movie.posterUrl)!,
                     name: movie.name,
                     genres: movie.genres,
-                    description: "",
-                    country: movie.countries,
+                    description: movie.description,
+                    countries: movie.countries,
                     year: movie.year
                 )
                 

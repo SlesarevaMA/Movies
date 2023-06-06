@@ -1,15 +1,15 @@
 //
-//  MovieListViewModel.swift
+//  MovieDetailViewModel.swift
 //  Movies
 //
-//  Created by Margarita Slesareva on 04.06.2023.
+//  Created by Margarita Slesareva on 05.06.2023.
 //
 
 import Combine
 import Foundation
 
-final class MovieListViewModel: ObservableObject {
-    @Published var movies = [MovieListItem]()
+final class MovieDetailViewModel: ObservableObject {
+    @Published var movie: Movie?
     
     private let movieService: MovieService
     
@@ -20,15 +20,13 @@ final class MovieListViewModel: ObservableObject {
     }
     
     func onAppear() {
-        
-            
         subscription = movieService
-            .getMovieList()
+            .getMovie()
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print(completion)
-            } receiveValue: { [weak self] movies in
-                self?.movies = movies
+            } receiveValue: { [weak self] movie in
+                self?.movie = movie
             }
     }
 }
