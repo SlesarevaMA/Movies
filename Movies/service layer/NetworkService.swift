@@ -6,34 +6,25 @@
 //
 
 import Foundation
+import Combine
 
 protocol NetworkService {
-    func requestData<T: Decodable>(request: Request, completion: @escaping (Result<T, NetworkError>) -> Void)
+    func requestData<T: Decodable>(request: URLRequest) -> AnyPublisher<T, Error>
 }
 
 final class NetworkServiceImpl: NetworkService {
     
-    private let decoder: Decoder
+    private let decoder: JSONDecoder
     private let requestManager: RequestManager
 
-    init(decoder: Decoder, requestManager: RequestManager) {
+    init(decoder: JSONDecoder, requestManager: RequestManager) {
         self.decoder = decoder
         self.requestManager = requestManager
     }
     
-    func requestData<T: Decodable>(request: Request, completion: @escaping (Result<T, NetworkError>) -> Void) {
-        requestManager.request(request: request) { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let decodedValue = try self.decoder.decode(type: T.self, from: data)
-                    completion(.success(decodedValue))
-                } catch {
-                    completion(.failure(.decode(error)))
-                }
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+    func requestData<T: Decodable>(request: URLRequest) -> AnyPublisher<T, Error> {
+        return requestManager.request(request: request)
+            .decode(type: T.self, decoder: decoder)
+            .eraseToAnyPublisher()
     }
 }

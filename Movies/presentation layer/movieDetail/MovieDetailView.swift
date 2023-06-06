@@ -1,5 +1,5 @@
 //
-//  FilmDetailView.swift
+//  MovieDetailView.swift
 //  Movies
 //
 //  Created by Margarita Slesareva on 31.05.2023.
@@ -17,21 +17,20 @@ private enum Metrics {
     static let horizontalDescriptionSpacing: CGFloat = 30
 }
 
-struct FilmDetail {
+struct MovieDetail {
     let url: URL
     let name: String
-    let genre: String
+    let genres: String
     let description: String
     let country: String
     let year: Int
 }
 
-struct FilmDetailView: View {
+struct MovieDetailView: View {
     
-    let model: FilmDetail
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-//    let attributes: AttributeContainer = .init([.font: Font.system(size: 14, weight: .bold)])
-//    let genres = AttributedString("Жанры:", attributes: attributes)
+    let model: MovieDetail
         
     var body: some View {
         VStack.zeroSpacing {
@@ -44,6 +43,24 @@ struct FilmDetailView: View {
             Spacer(minLength: 0)
         }
         .ignoresSafeArea(edges: .top)
+        .navigationBarBackButtonHidden()
+        .navigationBarItems(leading: backButton)
+    }
+    
+    private var backButton: some View {
+        Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }, label: {
+            Image(systemName: "arrow.left")
+                .font(.system(size: 16, weight: .bold))
+                .foregroundColor(Color(hex: 0x4557A2))
+        })
+    }
+    
+    private var titleString: AttributedString {
+        let result = AttributedString()
+        let style = AttributeContainer.font(.system(size: 16, weight: .bold))
+        return result.settingAttributes(style)
     }
     
     private var descriptions: some View {
@@ -86,10 +103,10 @@ struct FilmDetailView: View {
 
 struct FilmDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        FilmDetailView(model: FilmDetail(
+        MovieDetailView(model: MovieDetail(
             url: URL(string: "https://kinopoiskapiunofficial.tech/images/posters/kp/840152.jpg")!,
             name: "Изгой-один: Звёздные войны",
-            genre: "Жанры: фантастика, приключения",
+            genres: "Жанры: фантастика, приключения",
             description: "Сопротивление собирает отряд для выполнения особой миссии - надо выкрасть чертежи самого совершенного и мертоносного оружия Империи. Не всем суждено вернуться домой, но герои готовы к этому, ведь на кону судьба Галактики",
             country: "США",
             year: 2022

@@ -7,11 +7,10 @@
 
 import SwiftUI
 
-struct Movie: Identifiable, Decodable {
-    var id = UUID()
-    
+struct Movie: Identifiable, Hashable {
+    let id = UUID()
     let kinopoiskId: Int
-    let nameRu: String
+    let name: String
     let description: String
     let countries: String
     let genres: String

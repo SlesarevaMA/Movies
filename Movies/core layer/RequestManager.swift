@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import Combine
 
 protocol RequestManager {
-    func request(request: Request, completion: @escaping (Result<Data, NetworkError>) -> Void)
+    func request(request: URLRequest) -> AnyPublisher<Data, Error>
 }
 
 final class RequestManagerImpl: RequestManager {
@@ -19,26 +20,15 @@ final class RequestManagerImpl: RequestManager {
         self.session = session
     }
     
-    func request(request: Request, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        let dataTask = session.dataTask(with: request.urlRequest) { data, response, error in
-            if let error {
-                completion(.failure(.other(error)))
-                return
+    func request(request: URLRequest) -> AnyPublisher<Data, Error> {
+        return session.dataTaskPublisher(for: request)
+            .tryMap { data, response in
+                if let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode != 200 {
+                    throw NetworkError.invalidResponse(statusCode)
+                }
+
+                return data
             }
-            
-            if let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode != 200 {
-                completion(.failure(.invalidResponse(statusCode)))
-                return
-            }
-            
-            guard let data else {
-                completion(.failure(NetworkError.noData))
-                return
-            }
-            
-            completion(.success(data))
-        }
-        
-        dataTask.resume()
+            .eraseToAnyPublisher()
     }
 }
